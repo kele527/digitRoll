@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>数字滚动效果</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="format-detection" content="telephone=no">
+<style type="text/css">
+body{padding: 0;margin: 0;font-family: '微软雅黑';background: #f1f1f1;}
+h1 {text-align: center;font-size: 40px;font-weight: normal;}
+/*示例皮肤样式 [可选 全部删除也能跑]*/
+.my-skin{float: left;padding: 10px 20px;margin-top: 30px;color: #f00;clear:both;}
+.myroll {float: left;height: 40px;font-size: 38px;background: #fee;}
+.myroll .num{margin: 0 3px;}
+.my-skin span{float: left;font-size: 38px;line-height: 38px;color: #333;}
+
+
+</style>
+</head>
+
+<body>
+<h1>祝大家2015新年快樂!</h1>
+<div class="my-skin">
+    <span>我收到了</span>
+    <div id="num-roll" class="myroll"></div>
+    <span>个新年红包</span>
+</div>
+<div class="my-skin">
+    <span>我收到了</span>
+    <div id="num-roll2" class="myroll"></div>
+    <span>条新年祝福</span>
+</div>
+
+<script type="text/javascript" src="digitroll.js"></script>
+<script type="text/javascript">
+var myhongbao=518518;
+var mywish=2015;
+
+var r1=new DigitRoll({
+    container:'#num-roll',
+    width:9
+});
+r1.roll(myhongbao);
+
+var r2=new DigitRoll({
+    container:'#num-roll2'
+});
+r2.roll(mywish);
+
+//随机跑跑
+setInterval(function () {
+    myhongbao+=parseInt(Math.random()*100)
+    r1.roll(myhongbao)
+},3000)
+
+setInterval(function () {
+    mywish+=parseInt(Math.random()*100)
+    r2.roll(mywish)
+},4000)
+
+</script>
+</body>
+</html>
