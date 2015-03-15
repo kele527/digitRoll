@@ -5,6 +5,8 @@
  * @param {object} opts 实例化参数
  * @param {string} opts.container 容器选择器 selector
  * @param {number} opts.width=1 数字的总宽度个数, 即要显示几位数
+ * @param {direction} up 向上滚动 down 向下滚动
+ * @param {effect} effect 运动的效果，如上下滚动，左右翻转
  * @example
     HTML:
     <div id="num-roll"></div>
@@ -18,6 +20,15 @@
 function DigitRoll(opts) {
     this.container=document.querySelector(opts.container); //容器
     this.width=opts.width || 1;
+    this.direction=(opts.direction==="down")?"down":"up";
+    this.effect=opts.effect;
+
+    //typeof 函数, chrome 返回 "function"
+    //判断所选的效果是否存在
+    if(typeof DigitRoll.prototype[this.effect]!="function"){
+        this.effect="roll";
+    }
+
     if (!this.container) {
         throw Error('no container');
     }
@@ -35,23 +46,55 @@ DigitRoll.prototype={
     /** 
      * 滚动数字
      * @param {number} n 要滚动的数字
+     * @param {effect} effect 运动的效果，如上下滚动，左右翻转
      * @example
-        r1.roll(314159);
+        r1.move(314159);
 
         //定时更新
         setInterval(function(){
-            r1.roll(314159);
+            r1.move(314159);
         },5000)
+     */
+    move:function(n){
+        this[this.effect](n);
+    },
+    /*
+     *@desc左右翻转
+     *@param {number} n 要滚动的数字
+     */
+    flip:function(n){
+        var self=this;
+        this.check(n);
+        Array.prototype.forEach.call(this.container.querySelectorAll(".num"),function(item,i){
+            var currentNum=parseInt(item.querySelector("div:last-child").innerHTML);
+            var goalNum=parseInt(self.number[i]);
+            var gapNum=0;
+            var gapStr="";
+            if(currentNum==goalNum){
+                return ;
+            }else{
+                gapStr="<div>"+goalNum+"</div>";
+            }
+            
+            item.style.cssText+="-webkit-transition-duration:0s;-webkit-transform:rotateY(0)";
+            setTimeout(function(){
+                item.style.cssText+="-webkit-transition-duration:500ms;-webkit-transform:rotateY(-90deg);";
+            },50);
+            var rot=function(){
+                item.innerHTML=gapStr;
+                item.style.cssText+="-webkit-transform:rotateY(0deg);";
+                item.removeEventListener("webkitTransitionEnd",rot);
+            };
+            item.addEventListener("webkitTransitionEnd",rot);
+        });
+    },
+    /**
+     *@desc上下滚动效果
+     *@param {number} n 要滚动的数字
      */
     roll:function (n) {
         var self=this;
-        this.number=parseInt(n)+'';
-        if (this.number.length<this.width) {
-            this.number=new Array(this.width - this.number.length + 1).join('0') + this.number;
-        }else if (this.number.length>this.width) {
-            this.width=this.number.length;
-            this.setWidth();
-        }
+        this.check(n);
         Array.prototype.forEach.call(this.container.querySelectorAll('.num'), function (item,i) {
             var currentNum=parseInt(item.querySelector('div:last-child').innerHTML);//当前数字
             var goalNum=parseInt(self.number[i]);//目标数字
@@ -80,6 +123,19 @@ DigitRoll.prototype={
             },50)
         })
     },
+    /**
+     *@desc 检查位数，多退少补
+     *@param{number} n
+     */
+    check:function(n){
+        this.number=parseInt(n)+'';
+        if (this.number.length<this.width) {
+            this.number=new Array(this.width - this.number.length + 1).join('0') + this.number;
+        }else if (this.number.length>this.width) {
+            this.width=this.number.length;
+            this.setWidth();
+        }
+    },
     /** 
      * 重置宽度
      * @desc 一般用不到这个方法  
@@ -91,7 +147,7 @@ DigitRoll.prototype={
         n=n||this.width;
         var str='';
         for (var i=0; i<n; i++) {
-            str+='<div class="num" style="float:left;height:100%;line-height:'+this.rollHeight+'px"><div>0</div></div>';
+            str+='<div class="num" style="float:left;height:100%;position:relative;line-height:'+this.rollHeight+'px"><div>0</div></div>';
         }
         this.container.innerHTML=str;
     }
