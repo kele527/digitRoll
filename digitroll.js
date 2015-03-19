@@ -5,7 +5,6 @@
  * @param {object} opts 实例化参数
  * @param {string} opts.container 容器选择器 selector
  * @param {number} opts.width=1 数字的总宽度个数, 即要显示几位数
- * @param {direction} up 向上滚动 down 向下滚动
  * @param {effect} effect 运动的效果，如上下滚动，左右翻转
  * @example
     HTML:
@@ -14,13 +13,13 @@
     js:
     var r1=new DigitRoll({
         container:'#num-roll',
-        width:9
+        width:9,
+        effect:'flip'
     });
  */
 function DigitRoll(opts) {
     this.container=document.querySelector(opts.container); //容器
     this.width=opts.width || 1;
-    this.direction=(opts.direction==="down")?"down":"up";
     this.effect=opts.effect;
 
     //typeof 函数, chrome 返回 "function"
