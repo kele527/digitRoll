@@ -34,28 +34,30 @@ h1 {text-align: center;font-size: 40px;font-weight: normal;}
 <script type="text/javascript" src="digitroll.js"></script>
 <script type="text/javascript">
 var myhongbao=518518;
-var mywish=2015;
+var mywish=5;
 
 var r1=new DigitRoll({
     container:'#num-roll',
     width:9
 });
-r1.roll(myhongbao);
+r1.move(myhongbao);
 
 var r2=new DigitRoll({
-    container:'#num-roll2'
+    container:'#num-roll2',
+    width:2,
+    effect:"flip"
 });
-r2.roll(mywish);
+r2.move(mywish);
 
 //随机跑跑
 setInterval(function () {
     myhongbao+=parseInt(Math.random()*100)
-    r1.roll(myhongbao)
+    r1.move(myhongbao)
 },3000)
 
 setInterval(function () {
     mywish+=parseInt(Math.random()*100)
-    r2.roll(mywish)
+    r2.move(mywish)
 },4000)
 
 </script>
