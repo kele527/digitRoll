@@ -76,7 +76,8 @@ DigitRoll.prototype={
             item.style.cssText += '-webkit-transition-duration:0s;-webkit-transform:translateY(0)';//重置位置
             item.innerHTML = gapStr;
             setTimeout(function () {
-                item.style.cssText+='-webkit-transition-duration:1s;-webkit-transform:translateY(-'+self.rollHeight*gapNum+'px)';
+                var rNum = self.randomNum(1,2);
+                item.style.cssText+='-webkit-transition-duration:'+ rNum +'s;-webkit-transform:translateY(-'+self.rollHeight*gapNum+'px)';
             },50)
         })
     },
@@ -94,5 +95,8 @@ DigitRoll.prototype={
             str+='<div class="num" style="float:left;height:100%;line-height:'+this.rollHeight+'px"><div>0</div></div>';
         }
         this.container.innerHTML=str;
+    },
+    randomNum : function(min,max){
+        return min + Math.floor(Math.random() * (max-min + 1));
     }
 }
